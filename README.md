@@ -143,6 +143,7 @@ EV-Charging-Station-Network
 
 <img width="1472" height="540" alt="Screenshot 2026-07-22 232450" src="https://github.com/user-attachments/assets/492001e5-bf44-4969-b4d4-a731edb61b4d" />
 
+<img width="1475" height="783" alt="Screenshot 2026-07-22 232508" src="https://github.com/user-attachments/assets/a2d2c7b5-e75b-428e-bd47-196558b6be0e" />
 
 
 ### Booking Service
