@@ -24,6 +24,8 @@ The project follows a **Microservices Architecture** with REST API communication
 ---
 
 # System Architecture
+
+~~~
                           🌐 API Gateway
                                │
       ┌────────────────────────┼────────────────────────┐
@@ -44,6 +46,8 @@ The project follows a **Microservices Architecture** with REST API communication
                                                          ▼
                                                     Payment DB
 
+
+~~~
 # 🛠 Technology Stack
 
 | Technology | Version |
