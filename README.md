@@ -1,204 +1,487 @@
-# ⚡ GreenCharge – EV Charging Station Network
-
-> **A Spring Boot Microservices Capstone Project**
-> **Find • Book • Charge • Pay**
-
-![Java](https://img.shields.io/badge/Java-17-orange)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-brightgreen)
-![Microservices](https://img.shields.io/badge/Microservices-Architecture-blue)
-![H2](https://img.shields.io/badge/Database-H2-lightgrey)
-
----
+# ⚡ EV Charging Station Network - Microservices Project
 
 ## 📖 Overview
 
-GreenCharge is a **Spring Boot Microservices** application that enables users to:
+The **EV Charging Station Network** is an Industry Capstone Project developed using **Java 17** and **Spring Boot Microservices**. The system enables customers to locate EV charging stations, reserve charging slots, start and stop charging sessions, calculate charging costs, process payments, and maintain charging history.
 
-* 🔍 Find EV charging stations
-* 📅 Book charging slots
-* 🔌 Start & stop charging sessions
-* 💳 Generate invoices & make payments
-* 📜 View charging history
-
-The project follows a **Layered Architecture** and uses **RestTemplate** for service-to-service communication.
+The project follows a **Microservices Architecture** with REST API communication through **API Gateway** and inter-service communication using **RestTemplate**.
 
 ---
 
-## 📦 Microservices
+# 🏢 Business Scenario
 
-| Service             | Port | Responsibility                         |
-| ------------------- | ---- | -------------------------------------- |
-| ⚡ Charging Station  | 8081 | Manage stations & connectors           |
-| 📅 Booking          | 8082 | Book & cancel charging slots           |
-| 🔌 Charging Session | 8083 | Start/Stop charging & calculate energy |
-| 💳 Payment          | 8084 | Generate invoices & process payments   |
+GreenCharge Pvt. Ltd. operates hundreds of EV charging stations across multiple cities.
 
----
+The company requires a scalable microservices-based platform that allows customers to:
 
-## 🛠 Tech Stack
-
-* Java 17
-* Spring Boot
-* Spring Data JPA
-* H2 Database
-* RestTemplate
-* Jakarta Validation
-* Lombok & SLF4J
-* Maven
-* Postman
+- Locate nearby charging stations
+- Book charging slots
+- Start and stop charging sessions
+- Calculate charging costs
+- Process payments
+- View charging history
 
 ---
 
-## 🏗 Project Structure
+# 🎯 Project Objectives
 
-```text
+- Develop Enterprise REST APIs using Spring Boot
+- Follow Layered Architecture (Controller → Service → Repository)
+- Implement CRUD Operations
+- Validate all incoming requests using Bean Validation
+- Handle exceptions globally using `@ControllerAdvice`
+- Integrate Microservices using RestTemplate
+- Configure API Gateway for centralized routing
+- Test all APIs using Postman
+
+---
+
+# 🛠 Technology Stack
+
+| Technology | Version |
+|------------|----------|
+| Java | 17 |
+| Spring Boot | 3.x |
+| Spring Data JPA | Latest |
+| H2 Database (Development) | Latest |
+| MySQL (Production Ready) | Latest |
+| Maven | Latest |
+| Validation | Jakarta Validation |
+| RestTemplate | Spring Boot |
+| API Gateway | Spring Cloud Gateway |
+| Lombok | Latest |
+| Postman | API Testing |
+| Git & GitHub | Version Control |
+
+---
+
+# 🏗 Microservices
+
+## 1️⃣ Charging Station Service
+
+Responsible for managing charging stations.
+
+### Features
+
+- Register Charging Station
+- Update Station
+- Delete Station
+- View All Stations
+- View Station By ID
+- Search Station By City
+- Search Available Stations
+- Manage Connector Details
+- Manage Station Status
+
+---
+
+## 2️⃣ Booking Service
+
+Responsible for booking charging slots.
+
+### Features
+
+- Create Booking
+- Cancel Booking
+- View Booking
+- View All Bookings
+- Prevent Duplicate Booking
+- Verify Slot Availability
+
+---
+
+## 3️⃣ Charging Session Service
+
+Responsible for charging operations.
+
+### Features
+
+- Verify Booking
+- Verify Connector Availability
+- Start Charging
+- Stop Charging
+- Auto Stop at 100%
+- Calculate Duration
+- Calculate Energy Consumed
+- Calculate Charging Cost
+- View Charging History
+
+---
+
+## 4️⃣ Payment Service
+
+Responsible for payment processing.
+
+### Features
+
+- Generate Invoice
+- Record Payment
+- Update Payment Status
+- Get Payment Details
+
+---
+
+# 🔄 Microservice Communication
+
+```
+Client
+   │
+   ▼
+API Gateway
+   │
+   ├────────────► Charging Station Service
+   │
+   ├────────────► Booking Service
+   │
+   ├────────────► Charging Session Service
+   │                     │
+   │                     ├────────► Booking Service
+   │                     ├────────► Charging Station Service
+   │                     └────────► Payment Service
+   │
+   └────────────► Payment Service
+```
+
+Communication is implemented using **RestTemplate**.
+
+---
+
+# 📌 Functional Requirements
+
+## Charging Station
+
+- Register charging stations
+- Unique Station ID
+- Multiple connectors per station
+- Search by city
+- Search by availability
+
+Supported Connectors
+
+- CCS
+- CHAdeMO
+- Type-2
+- GB/T
+
+---
+
+## Booking
+
+- Book charging slot
+- Verify slot availability
+- Prevent duplicate bookings
+- Cancel booking
+- Booking lifecycle management
+
+---
+
+## Charging Session
+
+Before starting charging
+
+- Verify booking
+- Verify connector availability
+
+Charging Rules
+
+- Battery level must be less than 95%
+- Fast charging only for compatible connectors
+- Record
+
+  - Start Time
+  - Stop Time
+  - Duration
+  - Energy Consumed
+
+Calculate
+
+- Charging Duration
+- Units Consumed
+- Charging Cost
+
+Automatically stop charging when battery reaches **100%**.
+
+---
+
+## Payment
+
+- Generate Invoice
+- Record Payment
+- Update Payment Status
+- Maintain Invoice History
+
+---
+
+## Charging History
+
+Maintain charging history for every customer.
+
+---
+
+# 📡 REST Communication Flow
+
+```
+Charging Session Service
+        │
+        ├────────► Booking Service
+        │          Verify Booking
+        │
+        ├────────► Charging Station Service
+        │          Verify Connector
+        │
+        └────────► Payment Service
+                   Generate Bill
+```
+
+---
+
+# ✅ Validation Rules
+
+- Station Name is mandatory
+- Connector Type must be valid
+- Battery Percentage must be between 0 and 100
+- Charging Duration must be greater than zero
+- Energy Consumed must be positive
+- Booking Date cannot be in the past
+- Customer Mobile Number must be valid
+- Customer Email must be valid
+
+---
+
+# 📋 Business Rules
+
+- One charging slot can have only one active booking.
+- Charging cannot start without a confirmed booking.
+- Charging automatically stops when battery reaches 100%.
+- Fast charging is available only on supported connectors.
+- Payment failure changes invoice status to **PENDING**.
+- Connector availability updates automatically after charging completion.
+- Station Status can be
+
+```
+ACTIVE
+INACTIVE
+UNDER_MAINTENANCE
+```
+
+---
+
+# 🌐 REST APIs
+
+## Charging Station Service
+
+| Method | Endpoint |
+|----------|----------------|
+| POST | /stations |
+| GET | /stations |
+| GET | /stations/{id} |
+| PUT | /stations/{id} |
+| DELETE | /stations/{id} |
+
+---
+
+## Booking Service
+
+| Method | Endpoint |
+|----------|---------------------------|
+| POST | /bookings |
+| GET | /bookings |
+| GET | /bookings/{id} |
+| PUT | /bookings/{id}/cancel |
+
+---
+
+## Charging Session Service
+
+| Method | Endpoint |
+|----------|----------------------------|
+| POST | /charging/start |
+| PUT | /charging/{id}/stop |
+| GET | /charging/history/{customerId} |
+
+---
+
+## Payment Service
+
+| Method | Endpoint |
+|----------|----------------|
+| POST | /payments |
+| GET | /payments/{id} |
+
+---
+
+# ⚠ Global Exception Handling
+
+Custom Exceptions
+
+- StationNotFoundException
+- BookingNotFoundException
+- SlotUnavailableException
+- ConnectorNotSupportedException
+- LowBatteryException
+- PaymentFailedException
+
+Framework Exceptions
+
+- MethodArgumentNotValidException
+
+Generic Exception
+
+- Global Exception Handler
+
+---
+
+# 📂 Project Structure
+
+```
+EV-Charging-Station-Network
+│
+├── API-Gateway
+│
+├── Charging-Station-Service
+│
+├── Booking-Service
+│
+├── Charging-Session-Service
+│
+├── Payment-Service
+│
+└── README.md
+```
+
+Each service follows:
+
+```
 controller
 service
 repository
 entity
 dto
-client
-config
 exception
+config
+client
 ```
 
 ---
 
-## ✨ Features
+# 🚀 Implementation Milestones
 
-* ✅ CRUD Operations
-* ✅ Bean Validation
-* ✅ Global Exception Handling
-* ✅ REST API Development
-* ✅ RestTemplate Communication
-* ✅ Structured Logging
-* ✅ H2 Database
-* ✅ Layered Architecture
-* ✅ Duplicate Booking Prevention
-* ✅ Automatic Cost Calculation
-
----
-
-## 🔄 Communication Flow
-
-```text
-Client
-   │
-API Gateway
-   │
-Charging Session
-   ├── Booking Service
-   ├── Charging Station Service
-   └── Payment Service
-```
+| Phase | Description |
+|----------|-------------------------------|
+| Phase 1 | Create Spring Boot Projects |
+| Phase 2 | Charging Station Service |
+| Phase 3 | Booking Service |
+| Phase 4 | Charging Session Service |
+| Phase 5 | Payment Service |
+| Phase 6 | Bean Validation |
+| Phase 7 | Global Exception Handler |
+| Phase 8 | RestTemplate Integration |
+| Phase 9 | API Gateway |
+| Phase 10 | API Testing & Documentation |
 
 ---
 
-## 🌐 API Endpoints
+# 🧪 Testing
 
-### ⚡ Charging Station
+All APIs were tested using **Postman**.
 
-* POST `/stations`
-* GET `/stations`
-* GET `/stations/{id}`
+Testing includes
 
-### 📅 Booking
-
-* POST `/bookings`
-* PUT `/bookings/{id}/cancel`
-
-### 🔌 Charging Session
-
-* POST `/charging/start`
-* PUT `/charging/{id}/stop`
-* GET `/charging/history/{customerId}`
-
-### 💳 Payment
-
-* POST `/payments`
-* GET `/payments/{id}`
+- CRUD Operations
+- Validation
+- Exception Handling
+- REST Communication
+- API Gateway Routing
 
 ---
 
-## ✅ Validation
+# 📦 Deliverables
 
-* Station name required
-* Valid connector type
-* Battery: 0–100%
-* Positive energy consumed
-* Positive charging duration
-* Future booking date
-* Valid email & mobile number
-
----
-
-## ⚠ Exception Handling
-
-* StationNotFoundException
-* BookingNotFoundException
-* SlotUnavailableException
-* ConnectorNotSupportedException
-* LowBatteryException
-* PaymentFailedException
-* MethodArgumentNotValidException
-* Global Exception Handler
+- ✅ Complete Source Code
+- ✅ Database SQL Script
+- ✅ Postman Collection
+- ✅ README Documentation
+- ✅ Architecture Diagram
+- ✅ API Documentation
+- ✅ Execution Screenshots
 
 ---
 
-## 🚀 Run the Project
+# ▶️ How to Run
+
+## Clone Repository
 
 ```bash
-mvn spring-boot:run
+git clone https://github.com/your-username/EV-Charging-Station-Network.git
 ```
 
-| Service | URL            |
-| ------- | -------------- |
-| Station | localhost:8081 |
-| Booking | localhost:8082 |
-| Session | localhost:8083 |
-| Payment | localhost:8084 |
+---
+
+## Build Project
+
+```bash
+mvn clean install
+```
 
 ---
 
-## 💾 H2 Console
+## Run Services
 
-| Service | Console                   |
-| ------- | ------------------------- |
-| Station | localhost:8081/h2-console |
-| Booking | localhost:8082/h2-console |
-| Session | localhost:8083/h2-console |
-| Payment | localhost:8084/h2-console |
+Start services in the following order:
 
-**Username:** `sa`
-**Password:** *(blank)*
+1. Charging Station Service
+2. Booking Service
+3. Payment Service
+4. Charging Session Service
+5. API Gateway
 
 ---
 
-## 🧪 Testing
+## Access Through API Gateway
 
-* ✔ Postman Collection
-* ✔ API Documentation
-* ✔ H2 Database
-* ✔ Execution Screenshots
+```
+http://localhost:8080
+```
+
+Example
+
+```
+POST /stations
+
+POST /bookings
+
+POST /charging/start
+
+PUT /charging/{id}/stop
+
+POST /payments
+```
 
 ---
 
-## 📂 Deliverables
+# 📈 Future Enhancements
 
-* Source Code
-* README
-* Postman Collection
-* Architecture Diagram
-* API Documentation
-* SQL Script
-* Screenshots
+- Authentication using Spring Security & JWT
+- Service Discovery using Eureka Server
+- Distributed Configuration using Config Server
+- Circuit Breaker using Resilience4j
+- Docker Containerization
+- Kubernetes Deployment
+- CI/CD Pipeline with GitHub Actions
+- Monitoring using Prometheus & Grafana
 
 ---
 
-## 👨‍💻 Author
+# 👨‍💻 Author
 
 **Mohamed Afzal**
-**B.Tech – Information Technology**
-**Saveetha Engineering College**
 
-⭐ *If you like this project, don't forget to Star the repository!*
+B.Tech Information Technology
+
+Saveetha Engineering College
+
+---
+
+# ⭐ If you like this project
+
+Give this repository a ⭐ on GitHub.
